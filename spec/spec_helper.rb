@@ -1,6 +1,5 @@
 require 'net/http'
 require 'uri'
-require 'nokogiri'
 
 ENV['testing_http_for_me'] = 'true'
 require File.expand_path('../http_for_me', File.dirname(__FILE__))
