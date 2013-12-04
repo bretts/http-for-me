@@ -12,24 +12,25 @@ class HTTPServer
 		server = TCPServer.new(Configuration::SERVER[:host], Configuration::SERVER[:port])
 
 		loop do
-			puts "\nwaiting for incoming request: #{Time.now.to_s}"
-			socket = server.accept
+			Thread.start(server.accept) do |socket|
+				puts "\nwaiting for incoming request: #{Time.now.to_s}"
+				
+				request_line = socket.gets
 
-			request_line = socket.gets
+				next if request_line.nil? #don't crash if there is an empty request		
 
-			next if request_line.nil? #don't crash if there is an empty request		
+				puts request_line
 
-			puts request_line
+				path = get_requested_file_path(request_line)
 
-			path = get_requested_file_path(request_line)
-
-			if File.exists?(path) && !File.directory?(path)
-				respond_with_200(path, socket)
-			else
-				respond_with_404(socket)
+				if File.exists?(path) && !File.directory?(path)
+					respond_with_200(path, socket)
+				else
+					respond_with_404(socket)
+				end
+				
+				socket.close
 			end
-			
-			socket.close
 		end
 	end
 end
