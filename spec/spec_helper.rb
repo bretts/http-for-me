@@ -9,16 +9,7 @@ RSpec.configure do |rspec|
 
 	# assume that http_for_me is already running
 	rspec.before(:all) do
-		uri = URI.parse("http://#{Configuration::SERVER[:host]}:#{Configuration::SERVER[:port]}/index.html")
-
-		http = Net::HTTP.new(uri.host, uri.port)
-		request = Net::HTTP::Get.new(uri.request_uri)
-
-		begin
-			response = http.request(request)
-		rescue Errno::ECONNREFUSED
-			raise "You need to start the http_for_me server before running the tests. Go to the http_for_me folder and run ruby 'http_for_me.rb'"
-		end
+		get_response("http://#{Configuration::SERVER[:host]}:#{Configuration::SERVER[:port]}/index.html")
 	end
 end
 
@@ -31,5 +22,11 @@ def get_response(url)
 	http = Net::HTTP.new(uri.host, uri.port)
 	request = Net::HTTP::Get.new(uri.request_uri)
 
-	return http.request(request)
+	begin
+		response = http.request(request)
+	rescue Errno::ECONNREFUSED
+		raise "You need to start the http_for_me server before running the tests. Go to the http_for_me folder and run ruby 'http_for_me.rb'"
+	end
+
+	return response
 end
