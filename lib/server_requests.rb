@@ -32,7 +32,9 @@ module ServerRequests
 		# ensure the user is not requesting a file outside of the webroot
 		if(requested_file.split('/').include?('..'))
 			# return the index file if they are trying to get a file outside of the public folder
-			return File.join(Configuration::WEB_ROOT, 'index.html')
+			allowed_file = File.join(Configuration::WEB_ROOT, 'index.html')
+			puts "file requested outside of WEB_ROOT, returning: #{allowed_file} "
+			return allowed_file
 		else
 			return requested_file
 		end

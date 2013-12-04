@@ -5,13 +5,11 @@ require 'socket'
 require 'uri'
 
 class HTTPServer
-	include ServerRequests
-	include ServerResponses
+	extend ServerRequests
+	extend ServerResponses
 
 	def self.start_server
 		server = TCPServer.new(Configuration::SERVER[:host], Configuration::SERVER[:port])
-
-		#@@server_started = true
 
 		loop do
 			puts "\nwaiting for incoming request: #{Time.now.to_s}"
@@ -36,4 +34,4 @@ class HTTPServer
 	end
 end
 
-#HTTPServer.start_server
+HTTPServer.start_server if !ENV['testing_http_for_me']
