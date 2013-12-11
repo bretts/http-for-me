@@ -9,6 +9,8 @@ class HTTPServer
 	extend ServerResponses
 
 	def self.start_server
+		puts "Starting to listen for http requests at: http://#{Configuration::SERVER[:host]}:#{Configuration::SERVER[:port]}"
+		
 		server = TCPServer.new(Configuration::SERVER[:host], Configuration::SERVER[:port])
 
 		loop do
